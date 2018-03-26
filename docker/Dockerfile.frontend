@@ -1,0 +1,34 @@
+#
+# EvoPPI Frontend
+#
+# Copyright (C) 2017-2018 - Noé Vázquez González,
+# Miguel Reboiro-Jato, Jorge Vieira, Hugo López-Fernández,
+# and Cristina Vieira.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+
+FROM httpd:2.4
+
+ARG version=0.2.0-alpha.10
+
+RUN apt-get update
+RUN apt-get install wget -y
+
+RUN wget https://maven.sing-group.org/repository/npm-snapshots/@evoppi/frontend/-/frontend-${version}.tgz
+RUN tar zxvf frontend-${version}.tgz
+RUN mv package/dist/* /usr/local/apache2/htdocs/
+ADD apache/.htaccess /usr/local/apache2/htdocs/.htaccess
+
+RUN sed 's/^#LoadModule\ rewrite_module/LoadModule\ rewrite_module/' -i /usr/local/apache2/conf/httpd.conf

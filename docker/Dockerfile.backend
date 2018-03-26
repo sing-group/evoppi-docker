@@ -1,0 +1,45 @@
+#
+# EvoPPI Frontend
+#
+# Copyright (C) 2017-2018 - Noé Vázquez González,
+# Miguel Reboiro-Jato, Jorge Vieira, Hugo López-Fernández,
+# and Cristina Vieira.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+
+FROM jboss/wildfly:10.1.0.Final
+
+ARG version=0.2.0-SNAPSHOT
+ARG buildrest=0.2.0-20180301.183855-1
+ARG buildservice=0.2.0-20180301.183849-1
+ARG buildear=0.2.0-20180301.183903-1
+
+ADD wildfly10/docker-standalone.xml /opt/jboss/wildfly/standalone/configuration/standalone.xml
+
+RUN curl -o /opt/jboss/wildfly/standalone/deployments/mysql-connector-java-5.1.21.jar http://central.maven.org/maven2/mysql/mysql-connector-java/5.1.21/mysql-connector-java-5.1.21.jar
+
+RUN /opt/jboss/wildfly/bin/add-user.sh admin admin --silent
+
+#  RUN awk 'NR==2 {print "sleep 10"} 1' < /opt/jboss/wildfly/bin/standalone.sh > /opt/jboss/wildfly/bin/standalone.sh
+RUN mkdir -p /opt/jboss/wildfly/standalone/modules
+
+RUN curl -o /opt/jboss/wildfly/standalone/modules/evoppi-rest-${buildrest}.war https://maven.sing-group.org/repository/maven-snapshots/org/sing_group/evoppi-rest/${version}/evoppi-rest-${buildrest}.war
+RUN curl -o /opt/jboss/wildfly/standalone/modules/evoppi-service-${buildservice}.jar https://maven.sing-group.org/repository/maven-snapshots/org/sing_group/evoppi-service/${version}/evoppi-service-${buildservice}.jar
+#ADD ear/target/evoppi-ear-0.2.0-SNAPSHOT/lib/* /opt/jboss/wildfly/standalone/lib/
+
+RUN curl -o /opt/jboss/wildfly/standalone/deployments/evoppi-ear-${buildear}.ear https://maven.sing-group.org/repository/maven-snapshots/org/sing_group/evoppi-ear/${version}/evoppi-ear-${buildear}.ear
+#ADD ear/target/evoppi-backend-0.2.0-SNAPSHOT.ear /opt/jboss/wildfly/standalone/deployments/
+
+CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]

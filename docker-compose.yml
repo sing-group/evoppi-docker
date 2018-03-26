@@ -1,0 +1,76 @@
+#
+# EvoPPI Frontend
+#
+# Copyright (C) 2017-2018 - Noé Vázquez González,
+# Miguel Reboiro-Jato, Jorge Vieira, Hugo López-Fernández,
+# and Cristina Vieira.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+
+version: '3.4'
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    container_name: evoppi-backend
+    ports:
+      - "8080:8080"
+      - "9990:9990"
+    depends_on:
+      - docker
+      - database
+    volumes:
+      - shared-volume:/mnt/shared
+  database:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.database
+    container_name: evoppi-database
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: "evoppi"
+      MYSQL_DATABASE: "evoppi"
+      MYSQL_USER: "evoppi"
+      MYSQL_PASSWORD: "evoppipass"
+    healthcheck:
+      test: ["CMD", "mysql", "-pevoppi"]
+      interval: 10s
+      timeout: 10s
+      start_period: 60s
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    container_name: evoppi-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - docker
+      - database
+      - backend
+  docker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.docker
+    container_name: evoppi-docker
+    ports:
+      - "2376:2375"
+    privileged: true
+    volumes:
+      - shared-volume:/tmp/evoppi/docker
+volumes:
+  shared-volume:
