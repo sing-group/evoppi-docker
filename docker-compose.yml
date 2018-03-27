@@ -33,7 +33,7 @@ services:
       - docker
       - database
     volumes:
-      - shared-volume:/mnt/shared
+      - shared-volume:/tmp/
   database:
     build:
       context: .
@@ -68,9 +68,9 @@ services:
       dockerfile: docker/Dockerfile.docker
     container_name: evoppi-docker
     ports:
-      - "2376:2375"
+      - "12375:2375"
     privileged: true
     volumes:
-      - shared-volume:/tmp/evoppi/docker
+      - shared-volume:/tmp/
 volumes:
   shared-volume:
