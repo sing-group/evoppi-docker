@@ -1,5 +1,5 @@
 #
-# EvoPPI Frontend
+# EvoPPI Docker
 #
 # Copyright (C) 2017-2018 - Noé Vázquez González,
 # Miguel Reboiro-Jato, Jorge Vieira, Hugo López-Fernández,
@@ -23,12 +23,14 @@ FROM httpd:2.4
 
 ARG version=0.2.0-alpha.10
 
-RUN apt-get update
-RUN apt-get install wget -y
+RUN apt-get update \
+ && apt-get -y install wget \
+ && wget https://maven.sing-group.org/repository/npm-snapshots/@evoppi/frontend/-/frontend-${version}.tgz \
+ && tar zxvf frontend-${version}.tgz \
+ && mv package/dist/* /usr/local/apache2/htdocs/ \
+ && apt-get -y purge wget \
+ && apt-get -y --purge autoremove
 
-RUN wget https://maven.sing-group.org/repository/npm-snapshots/@evoppi/frontend/-/frontend-${version}.tgz
-RUN tar zxvf frontend-${version}.tgz
-RUN mv package/dist/* /usr/local/apache2/htdocs/
 ADD apache/.htaccess /usr/local/apache2/htdocs/.htaccess
 
 RUN sed 's/^#LoadModule\ rewrite_module/LoadModule\ rewrite_module/' -i /usr/local/apache2/conf/httpd.conf

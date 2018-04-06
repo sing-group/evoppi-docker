@@ -1,4 +1,5 @@
 -- EvoPPI v0.1.0
+USE `evoppi`;
 
 INSERT INTO `user` (`login`, `role`, `email`, `password`)
 VALUES ('admin', 'ADMIN', 'admin@email.com', '25E4EE4E9229397B6B17776BFCEAF8E7');

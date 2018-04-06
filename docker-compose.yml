@@ -1,5 +1,5 @@
 #
-# EvoPPI Frontend
+# EvoPPI Docker
 #
 # Copyright (C) 2017-2018 - Noé Vázquez González,
 # Miguel Reboiro-Jato, Jorge Vieira, Hugo López-Fernández,
@@ -21,56 +21,61 @@
 
 version: '3.4'
 services:
+  database:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.database
+    container_name: evoppi-database
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "evoppipass"
+      MYSQL_DATABASE: "evoppi"
+      MYSQL_USER: "evoppi"
+      MYSQL_PASSWORD: "evoppipass"
+    volumes:
+      - evoppi-database-data:/var/lib/mysql
+    networks:
+      evoppi-network:
+        ipv4_address: 172.20.0.10
   backend:
     build:
       context: .
       dockerfile: docker/Dockerfile.backend
     container_name: evoppi-backend
     ports:
-      - "8080:8080"
-      - "9990:9990"
+      - "${BACKEND_HTTP_PORT:-8080}:8080"
+      - "${BACKEND_HTTP_MANAGEMENT_PORT:-9990}:9990"
+    restart: always
+    privileged: true
     depends_on:
-      - docker
       - database
     volumes:
-      - shared-volume:/tmp/
-  database:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.database
-    container_name: evoppi-database
-    ports:
-      - 3306:3306
+      - "${TEMP_DATA_DIRECTORY:-/tmp/evoppi-docker}:${TEMP_DATA_DIRECTORY:-/tmp/evoppi-docker}"
     environment:
-      MYSQL_ROOT_PASSWORD: "evoppi"
-      MYSQL_DATABASE: "evoppi"
-      MYSQL_USER: "evoppi"
-      MYSQL_PASSWORD: "evoppipass"
-    healthcheck:
-      test: ["CMD", "mysql", "-pevoppi"]
-      interval: 10s
-      timeout: 10s
-      start_period: 60s
+      TEMP_DATA_DIRECTORY: "${TEMP_DATA_DIRECTORY:-/tmp/evoppi-docker}"
+    networks:
+      evoppi-network:
+        ipv4_address: 172.20.0.20
   frontend:
     build:
       context: .
       dockerfile: docker/Dockerfile.frontend
     container_name: evoppi-frontend
     ports:
-      - "80:80"
+      - "${FRONTEND_HTTP_PORT:-80}:80"
+    restart: always
     depends_on:
-      - docker
       - database
       - backend
-  docker:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.docker
-    container_name: evoppi-docker
-    ports:
-      - "12375:2375"
-    privileged: true
-    volumes:
-      - shared-volume:/tmp/
+    networks:
+      evoppi-network:
+        ipv4_address: 172.20.0.30
 volumes:
-  shared-volume:
+  evoppi-database-data:
+networks:
+  evoppi-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.20.0.0/16
