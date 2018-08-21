@@ -21,16 +21,19 @@
 
 FROM httpd:2.4
 
-ARG version=0.2.0-alpha.10
+ARG version=1.0.0-alpha.106
 
 RUN apt-get update \
- && apt-get -y install wget \
- && wget https://maven.sing-group.org/repository/npm-snapshots/@evoppi/frontend/-/frontend-${version}.tgz \
+ && apt-get -y install wget
+
+RUN wget https://maven.sing-group.org/repository/npm-snapshots/@evoppi/frontend/-/frontend-${version}.tgz \
  && tar zxvf frontend-${version}.tgz \
- && mv package/dist/* /usr/local/apache2/htdocs/ \
- && apt-get -y purge wget \
+ && mv package/dist/* /usr/local/apache2/htdocs/
+
+RUN apt-get -y purge wget \
  && apt-get -y --purge autoremove
 
 ADD apache/.htaccess /usr/local/apache2/htdocs/.htaccess
 
 RUN sed 's/^#LoadModule\ rewrite_module/LoadModule\ rewrite_module/' -i /usr/local/apache2/conf/httpd.conf
+RUN sed '/^<Directory \"\/usr\/local\/apache2\/htdocs\">$/,/^<\/Directory>$/ s/AllowOverride None/AllowOverride all/' -i /usr/local/apache2/conf/httpd.conf

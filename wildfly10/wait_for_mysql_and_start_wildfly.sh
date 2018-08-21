@@ -1,9 +1,15 @@
 #!/bin/bash
 
-while [ "$(mysql -e 'SELECT * FROM user' -u evoppi -pevoppipass -h evoppi-database evoppi)" == "" ];
+QUERY="$(mysql -e 'SELECT * FROM user' -u evoppi -pevoppipass -h evoppi-database evoppi)"
+RESULT=$?
+echo "command result ${RESULT}"
+echo "query result ${QUERY}"
+
+while [ ${RESULT} -ne 0 ] || [ "${QUERY}" -eq "" ];
 do
   echo "Waiting for database ($SECONDS s)";
-  sleep 1;
+  sleep 5;
+  QUERY="$(mysql -e 'SELECT * FROM user' -u evoppi -pevoppipass -h evoppi-database evoppi)"
 done;
 
 echo "Starting WildFly";
