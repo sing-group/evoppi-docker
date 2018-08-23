@@ -21,12 +21,11 @@
 
 FROM mariadb:10
 
-#ADD db/evoppi-mysql.sql /docker-entrypoint-initdb.d/001.sql
-#ADD db/evoppi-mysql-data.sql /docker-entrypoint-initdb.d/003.sql
+ARG version=1.0.0
 
 RUN apt-get update \
  && apt-get -y install wget \
- && wget http://static.sing-group.org/EvoPPI/db/sql/0.1.0/evoppi-mysql.sql -O /docker-entrypoint-initdb.d/001.sql \
- && wget http://static.sing-group.org/EvoPPI/db/sql/0.1.0/evoppi.sql.gz -O /docker-entrypoint-initdb.d/002.sql.gz \
+ && wget http://static.sing-group.org/EvoPPI/db/sql/${version}/evoppi-mysql.sql -O /docker-entrypoint-initdb.d/001.sql \
+ && wget http://static.sing-group.org/EvoPPI/db/sql/${version}/evoppi.sql.gz -O /docker-entrypoint-initdb.d/002.sql.gz \
  && apt-get -y purge wget \
  && apt-get -y --purge autoremove

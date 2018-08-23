@@ -21,8 +21,8 @@
 
 FROM jboss/wildfly:10.1.0.Final
 
-ARG version=0.3.0-SNAPSHOT
-ARG buildear=0.3.0-20180820.202923-1
+ARG version=1.0.0
+ARG buildear=1.0.0
 
 USER root
 RUN yum install mariadb -y
@@ -33,7 +33,7 @@ USER jboss
 ADD wildfly10/docker-standalone.xml /opt/jboss/wildfly/standalone/configuration/standalone.xml
 
 RUN curl -o /opt/jboss/wildfly/standalone/deployments/mysql-connector-java-5.1.21.jar http://central.maven.org/maven2/mysql/mysql-connector-java/5.1.21/mysql-connector-java-5.1.21.jar
-RUN curl -o /opt/jboss/wildfly/standalone/deployments/evoppi-ear-${buildear}.ear https://maven.sing-group.org/repository/maven-snapshots/org/sing_group/evoppi-ear/${version}/evoppi-ear-${buildear}.ear
+RUN curl -o /opt/jboss/wildfly/standalone/deployments/evoppi-ear-${buildear}.ear https://maven.sing-group.org/repository/maven-releases/org/sing_group/evoppi-ear/${version}/evoppi-ear-${buildear}.ear
 RUN /opt/jboss/wildfly/bin/add-user.sh admin admin --silent
 RUN sed -i 's/-Xmx512m/-Xmx4G/g' /opt/jboss/wildfly/bin/standalone.conf
 
