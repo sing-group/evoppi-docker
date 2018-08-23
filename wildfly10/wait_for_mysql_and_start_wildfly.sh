@@ -2,14 +2,13 @@
 
 QUERY="$(mysql -e 'SELECT * FROM user' -u evoppi -pevoppipass -h evoppi-database evoppi)"
 RESULT=$?
-echo "command result ${RESULT}"
-echo "query result ${QUERY}"
 
-while [ ${RESULT} -ne 0 ] || [ "${QUERY}" -eq "" ];
+while [ ${RESULT} -ne 0 ] || [ -z "${QUERY}" ];
 do
   echo "Waiting for database ($SECONDS s)";
-  sleep 5;
+  sleep 30;
   QUERY="$(mysql -e 'SELECT * FROM user' -u evoppi -pevoppipass -h evoppi-database evoppi)"
+  RESULT=$?
 done;
 
 echo "Starting WildFly";
