@@ -8,12 +8,19 @@ To run this project, first, you will need to install:
 * Docker: [https://www.docker.com/community-edition#/download](https://www.docker.com/community-edition#/download)
 * Docker Compose: [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/)
 
-In addition, Docker's remote REST API should be enabled and configured to listen in the TCP address `172.20.0.1:2375`. For Debian systems, depending on whether your system uses `systemd` or not, you can follow these tutorials:
+EvoPPI uses the Docker's remote REST API, that should be enabled and configured to listen in the TCP address `0.0.0.0:2375`. For Debian systems, depending on whether your system uses `systemd` or not, you can follow these tutorials:
 
   * Without `systemd` (e.g. Ubuntu <= 14.10): https://dor.ky/enabling-docker-remote-api-on-ubuntu/
-  * With `systemd` (e.g. Ubuntu >= 15.04): https://www.ivankrizsan.se/2016/05/18/enabling-docker-remote-api-on-ubuntu-16-04/
+  * With `systemd` (e.g. Ubuntu >= 15.04): https://success.docker.com/article/how-do-i-enable-the-remote-api-for-dockerd
 
-## Building images
+In addition, the `/tmp/evoppi-docker` directory will be mounted in the backend container. To ensure that the container can write into this directory, you can change the user's permissions to: `chmod a+w /tmp/evoppi-docker`. If you want to change the temporal folder, please, read the "Changing configuration" section.
+
+## Application configuration
+
+Most of the configuration parameters of the application are located at the `wildfly10/docker-standalone.xml` file. In the `urn:jboss:domain:naming:2.0` subsystem you will find several configuration parameters that you should change before executing the application.
+
+## Application execution
+### Building images
 
 In order to build all the images use the following command:
 
@@ -21,17 +28,17 @@ In order to build all the images use the following command:
 docker-compose build
 ```
 
-## Running containers
+### Running containers
 
-In order to run all the images use the following command:
+In order to run all the images in daemon mode, use the following command:
 
 ```docker
-docker-compose up
+docker-compose up -d
 ```
 
-The first time it will take some time as it neets to build the database.
+The first time it will take some time as it needs to build the database.
 
-## Changing configuration [Experimental]
+## Changing deployment configuration
 
 Some configuration parameters can be changed when starting the image, to do so, you just have to add the parameters to change as enviroment paramenters. For example, you can change the temporal data directory as follows:
 
@@ -53,6 +60,7 @@ Change temporal data directory (must be writeable by the docker user):
 
 Change backend ports:
 
+  * **AJP port**: `BACKEND_AJP_PORT` (default value: `8009`)
   * **HTTP port**: `BACKEND_HTTP_PORT` (default value: `8080`)
   * **HTTP management port**: `BACKEND_HTTP_MANAGEMENT_PORT` (default value: `9990`)
 

@@ -21,13 +21,15 @@
 
 FROM jboss/wildfly:10.1.0.Final
 
-ARG version=1.0.0
-ARG buildear=1.0.0
+ARG version=1.2.0
+ARG buildear=1.2.0
 
 USER root
 RUN yum install mariadb -y
 ADD wildfly10/wait_for_mysql_and_start_wildfly.sh /wait_for_mysql_and_start_wildfly.sh
 RUN chmod +x /wait_for_mysql_and_start_wildfly.sh
+RUN mkdir -p /tmp/evoppi-docker
+RUN chown jboss:jboss /tmp/evoppi-docker -R
 
 USER jboss
 ADD wildfly10/docker-standalone.xml /opt/jboss/wildfly/standalone/configuration/standalone.xml
@@ -36,6 +38,5 @@ RUN curl -o /opt/jboss/wildfly/standalone/deployments/mysql-connector-java-5.1.2
 RUN curl -o /opt/jboss/wildfly/standalone/deployments/evoppi-ear-${buildear}.ear https://maven.sing-group.org/repository/maven-releases/org/sing_group/evoppi-ear/${version}/evoppi-ear-${buildear}.ear
 RUN /opt/jboss/wildfly/bin/add-user.sh admin admin --silent
 RUN sed -i 's/-Xmx512m/-Xmx4G/g' /opt/jboss/wildfly/bin/standalone.conf
-
 
 CMD ["/wait_for_mysql_and_start_wildfly.sh"]

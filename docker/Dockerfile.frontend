@@ -21,12 +21,12 @@
 
 FROM httpd:2.4
 
-ARG version=1.0.0-alpha.106
+ARG version=1.2.0
 
 RUN apt-get update \
  && apt-get -y install wget
 
-RUN wget https://maven.sing-group.org/repository/npm-snapshots/@evoppi/frontend/-/frontend-${version}.tgz \
+RUN wget https://maven.sing-group.org/repository/npm-releases/@evoppi/frontend/-/frontend-${version}.tgz \
  && tar zxvf frontend-${version}.tgz \
  && mv package/dist/* /usr/local/apache2/htdocs/
 

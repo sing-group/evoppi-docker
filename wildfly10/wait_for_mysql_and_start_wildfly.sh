@@ -13,4 +13,4 @@ done;
 
 echo "Starting WildFly";
 
-/opt/jboss/wildfly/bin/standalone.sh -b "0.0.0.0" -bmanagement "0.0.0.0" -Dhost.address="172.20.0.1" -Dtemp.directory="$TEMP_DATA_DIRECTORY";
+/opt/jboss/wildfly/bin/standalone.sh -b "0.0.0.0" -bmanagement "0.0.0.0" -Dhost.address="172.30.0.1" -Dtemp.directory="$TEMP_DATA_DIRECTORY";
