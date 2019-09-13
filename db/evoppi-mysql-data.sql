@@ -1,4 +1,3 @@
--- EvoPPI v0.1.0
 USE `evoppi`;
 
 INSERT INTO `user` (`login`, `role`, `email`, `password`)
@@ -8,3 +7,6 @@ VALUES ('researcher', 'RESEARCHER', 'researcher@email.com', '9ADF82A517DCDC0C208
 
 INSERT INTO `administrator` (`login`) VALUES ('admin');
 INSERT INTO `researcher` (`login`) VALUES ('researcher');
+
+UPDATE gene g
+SET g.defaultName = (SELECT name FROM gene_name_value WHERE geneId = g.id ORDER BY IF(name RLIKE '^[a-z]', 1, 2), name LIMIT 1);
