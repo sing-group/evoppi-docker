@@ -25,6 +25,10 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.database
+      args:
+        version: ${EVOPPI_DATABASE_VERSION:-1.0.0}
+        admin_password: ${EVOPPI_DATABASE_ADMIN_PASSWORD:-admin}
+        researcher_password: ${EVOPPI_DATABASE_RESEARCHER_PASSWORD:-researcher}
     container_name: evoppi-database
     restart: always
     environment:
@@ -42,11 +46,15 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.backend
+      args:
+        backend_host: ${EVOPPI_BACKEND_HOST:-localhost:8080}
+        version: ${EVOPPI_BACKEND_VERSION:-1.2.0}
+        buildear: ${EVOPPI_BACKEND_EAR_BUILD:-1.2.0}
     container_name: evoppi-backend
     ports:
-      - "${BACKEND_HTTP_PORT:-8080}:8080"
-      - "${BACKEND_AJP_PORT:-8009}:8009"
-      - "${BACKEND_HTTP_MANAGEMENT_PORT:-9990}:9990"
+      - "${EVOPPI_BACKEND_HTTP_PORT:-8080}:8080"
+      - "${EVOPPI_BACKEND_AJP_PORT:-8009}:8009"
+      - "${EVOPPI_BACKEND_HTTP_MANAGEMENT_PORT:-9990}:9990"
     restart: always
     privileged: true
     depends_on:
@@ -62,9 +70,13 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.frontend
+      args:
+        frontend_host: ${EVOPPI_FRONTEND_HOST:-localhost}
+        backend_host: ${EVOPPI_BACKEND_HOST:-localhost:8080}
+        version: ${EVOPPI_FRONTEND_VERSION:-1.2.0}        
     container_name: evoppi-frontend
     ports:
-      - "${FRONTEND_HTTP_PORT:-80}:80"
+      - "${EVOPPI_FRONTEND_HTTP_PORT:-80}:80"
     restart: always
     depends_on:
       - database

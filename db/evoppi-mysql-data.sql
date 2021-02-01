@@ -1,9 +1,9 @@
 USE `evoppi`;
 
 INSERT INTO `user` (`login`, `role`, `email`, `password`)
-VALUES ('admin', 'ADMIN', 'admin@email.com', '25E4EE4E9229397B6B17776BFCEAF8E7');
+VALUES ('admin', 'ADMIN', 'admin@email.com', '%%ADMIN_PASSWORD%%');
 INSERT INTO `user` (`login`, `role`, `email`, `password`)
-VALUES ('researcher', 'RESEARCHER', 'researcher@email.com', '9ADF82A517DCDC0C2087598ABAC14916');
+VALUES ('researcher', 'RESEARCHER', 'researcher@email.com', '%%RESEARCHER_PASSWORD%%');
 
 INSERT INTO `administrator` (`login`) VALUES ('admin');
 INSERT INTO `researcher` (`login`) VALUES ('researcher');

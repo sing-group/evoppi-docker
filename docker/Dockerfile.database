@@ -21,7 +21,9 @@
 
 FROM mariadb:10
 
-ARG version=1.0.0
+ARG version
+ARG admin_password
+ARG researcher_password
 
 RUN apt-get update \
  && apt-get -y install wget \
@@ -30,4 +32,9 @@ RUN apt-get update \
  && apt-get -y purge wget \
  && apt-get -y --purge autoremove
 
- ADD db/evoppi-mysql-data.sql /docker-entrypoint-initdb.d/003.sql
+ADD db/evoppi-mysql-data.sql /docker-entrypoint-initdb.d/003.sql
+
+RUN ADMIN_PASSWORD=$(echo -n ${admin_password} | md5sum | awk '{print $1}') \
+    && sed -i "s/%%ADMIN_PASSWORD%%/${ADMIN_PASSWORD}/g" /docker-entrypoint-initdb.d/003.sql \
+    && RESEARCHER_PASSWORD=$(echo -n ${researcher_password}| md5sum | awk '{print $1}') \
+    && sed -i "s/%%RESEARCHER_PASSWORD%%/${RESEARCHER_PASSWORD}/g" /docker-entrypoint-initdb.d/003.sql
