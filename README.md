@@ -13,7 +13,7 @@ EvoPPI uses the Docker's remote REST API, that should be enabled and configured 
   * Without `systemd` (e.g. Ubuntu <= 14.10): https://dor.ky/enabling-docker-remote-api-on-ubuntu/
   * With `systemd` (e.g. Ubuntu >= 15.04): https://www.ivankrizsan.se/2016/05/18/enabling-docker-remote-api-on-ubuntu-16-04/
 
-For instance, the default `ExecStart` entry in Ubuntu >= 15.04 systems may look like:
+For instance, the default `ExecStart` entry in Ubuntu >= 15.04 systems in the `/lib/systemd/system/docker.service` file may look like:
 ```
 ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
 ```
@@ -22,6 +22,8 @@ In this case, you just need to add `-H tcp://0.0.0.0:2375` at the end of that li
 ```
 ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock -H tcp://0.0.0.0:2375
 ```
+
+And restart Docker running `systemctl daemon-reload && sudo service docker restart`.
 
 ## EvoPPI configuration
 
