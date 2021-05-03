@@ -22,13 +22,14 @@
 FROM httpd:2.4
 
 ARG version
+ARG npm_server
 ARG backend_host
 ARG frontend_host
 
 RUN apt-get update \
  && apt-get -y install wget
 
-RUN wget https://maven.sing-group.org/repository/npm-releases/@evoppi/frontend/-/frontend-${version}.tgz \
+RUN wget https://maven.sing-group.org/repository/${npm_server}/@evoppi/frontend/-/frontend-${version}.tgz \
  && tar zxvf frontend-${version}.tgz \
  && mv package/dist/* /usr/local/apache2/htdocs/
 
@@ -40,5 +41,5 @@ ADD apache/.htaccess /usr/local/apache2/htdocs/.htaccess
 RUN sed 's/^#LoadModule\ rewrite_module/LoadModule\ rewrite_module/' -i /usr/local/apache2/conf/httpd.conf
 RUN sed '/^<Directory \"\/usr\/local\/apache2\/htdocs\">$/,/^<\/Directory>$/ s/AllowOverride None/AllowOverride all/' -i /usr/local/apache2/conf/httpd.conf
 
-RUN sed -i -e "s#http://evoppi.sing-group.org/evoppi-backend/rest/#http://${backend_host}/evoppi-backend/rest/#g" /usr/local/apache2/htdocs/main.ffba345414a6b7638058.js
-RUN sed -i -e "s#http://evoppi.i3s.up.pt#http://${frontend_host}#g" /usr/local/apache2/htdocs/main.ffba345414a6b7638058.js
+RUN sed -i -e "s#http://evoppi.sing-group.org/evoppi-backend/rest/#http://${backend_host}/evoppi-backend/rest/#g" /usr/local/apache2/htdocs/main*.js
+RUN sed -i -e "s#http://evoppi.i3s.up.pt#http://${frontend_host}#g" /usr/local/apache2/htdocs/main*.js

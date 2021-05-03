@@ -50,6 +50,7 @@ services:
         backend_host: ${EVOPPI_BACKEND_HOST:-localhost:8080}
         version: ${EVOPPI_BACKEND_VERSION:-1.2.0}
         buildear: ${EVOPPI_BACKEND_EAR_BUILD:-1.2.0}
+        maven_server: ${EVOPPI_BACKEND_MAVEN_SERVER:-maven-releases}
     container_name: evoppi-backend
     ports:
       - "${EVOPPI_BACKEND_HTTP_PORT:-8080}:8080"
@@ -73,7 +74,8 @@ services:
       args:
         frontend_host: ${EVOPPI_FRONTEND_HOST:-localhost}
         backend_host: ${EVOPPI_BACKEND_HOST:-localhost:8080}
-        version: ${EVOPPI_FRONTEND_VERSION:-1.2.0}        
+        version: ${EVOPPI_FRONTEND_VERSION:-1.2.0}
+        npm_server: ${EVOPPI_FRONTEND_NPM_SERVER:-npm-releases}
     container_name: evoppi-frontend
     ports:
       - "${EVOPPI_FRONTEND_HTTP_PORT:-80}:80"
