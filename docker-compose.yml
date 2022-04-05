@@ -41,7 +41,7 @@ services:
     networks:
       evoppi-network:
         ipv4_address: 172.30.0.10
-    command: --wait_timeout=28800 --max_allowed_packet=1G
+    command: --wait_timeout=1300000 --max_allowed_packet=1G
   backend:
     build:
       context: .
