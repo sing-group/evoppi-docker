@@ -66,7 +66,7 @@ The backend image mounts the `/tmp/evoppi-docker` directory to create temporary 
 
 To guarantee that this directory is properly configured in every reboot of the server where EvoPPI is deployed, the `scripts/fix-evoppi-docker-dir.sh` script can be added to the crontab with `crontab -e`:
 ```
-@reboot /path/to/evoppi-docker/scripts/fix-dreimt-docker-dir.sh
+@reboot /path/to/evoppi-docker/scripts/fix-evoppi-docker-dir.sh
 ```
 
 ### Deployment
