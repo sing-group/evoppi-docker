@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# ----------------------------------------------#
+#       Mandatory variables                     #
+# ----------------------------------------------#
+
+export EVOPPI_DATABASE_VERSION=2022.04
+
+export EVOPPI_BACKEND_VERSION=2.1.0
+export EVOPPI_BACKEND_EAR_BUILD=2.1.0
+
+export EVOPPI_FRONTEND_VERSION=2.1.0
+
+# ----------------------------------------------#
+#       Optional variables                      #
+# ----------------------------------------------#
+
+# export COMPOSE_PROJECT_NAME=evoppidocker_custom
+
+# export EVOPPI_BACKEND_HOST=my.evoppy.com
+
+# export EVOPPI_FRONTEND_HOST=my.evoppy.com
+
+# export EVOPPI_BACKEND_HTTP_PORT=9898
+# export EVOPPI_BACKEND_AJP_PORT=9899
+# export EVOPPI_BACKEND_HTTP_MANAGEMENT_PORT=9897
+
+# export EVOPPI_FRONTEND_HTTP_PORT=9896
+
+# export EVOPPI_DATABASE_CONTAINER_NAME=custom-evoppi-database
+# export EVOPPI_BACKEND_CONTAINER_NAME=custom-evoppi-backend
+# export EVOPPI_FRONTEND_CONTAINER_NAME=custom-evoppi-frontend
+
+# ----------------------------------------------#
+#       Optional variables for development      #
+# ----------------------------------------------#
+
+# export EVOPPI_FRONTEND_NPM_SERVER=npm-snapshots
+# export EVOPPI_BACKEND_MAVEN_SERVER=maven-snapshots
