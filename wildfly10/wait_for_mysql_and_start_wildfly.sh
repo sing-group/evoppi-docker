@@ -1,13 +1,13 @@
 #!/bin/bash
 
-QUERY="$(mysql -e 'SELECT * FROM user' -u evoppi -pevoppipass -h evoppi-database evoppi)"
+QUERY="$(mysql -e 'SELECT * FROM user' -u evoppi -pevoppipass -h %%EVOPPI_DATABASE_CONTAINER_NAME%% evoppi)"
 RESULT=$?
 
 while [ ${RESULT} -ne 0 ] || [ -z "${QUERY}" ];
 do
   echo "Waiting for database ($SECONDS s)";
   sleep 30;
-  QUERY="$(mysql -e 'SELECT * FROM user' -u evoppi -pevoppipass -h evoppi-database evoppi)"
+  QUERY="$(mysql -e 'SELECT * FROM user' -u evoppi -pevoppipass -h %%EVOPPI_DATABASE_CONTAINER_NAME%% evoppi)"
   RESULT=$?
 done;
 

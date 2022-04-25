@@ -25,22 +25,25 @@ ARG version
 ARG buildear
 ARG maven_server
 ARG backend_host
+ARG database_container_name
 
 USER root
 RUN yum install mariadb -y
-ADD wildfly10/wait_for_mysql_and_start_wildfly.sh /wait_for_mysql_and_start_wildfly.sh
-RUN chmod +x /wait_for_mysql_and_start_wildfly.sh
-RUN mkdir -p /tmp/evoppi-docker
-RUN chown jboss:jboss /tmp/evoppi-docker -R
+ADD wildfly10/wait_for_mysql_and_start_wildfly.sh /opt/wait_for_mysql_and_start_wildfly.sh
+RUN chmod +x /opt/wait_for_mysql_and_start_wildfly.sh \
+	&& sed -i "s/%%EVOPPI_DATABASE_CONTAINER_NAME%%/${database_container_name}/g" /opt/wait_for_mysql_and_start_wildfly.sh \
+	&& mkdir -p /tmp/evoppi-docker \
+	&& chown jboss:jboss /tmp/evoppi-docker -R
 
 USER jboss
 ADD wildfly10/docker-standalone.xml /opt/jboss/wildfly/standalone/configuration/standalone.xml
 RUN sed -i "s/%%EVOPPI_BACKEND_HOST%%/${backend_host}/g" /opt/jboss/wildfly/standalone/configuration/standalone.xml \
-	&& sed -i "s/%%EVOPPI_BACKEND_VERSION%%/${version}/g" /opt/jboss/wildfly/standalone/configuration/standalone.xml
+	&& sed -i "s/%%EVOPPI_BACKEND_VERSION%%/${version}/g" /opt/jboss/wildfly/standalone/configuration/standalone.xml \
+	&& sed -i "s/%%EVOPPI_DATABASE_CONTAINER_NAME%%/${database_container_name}/g" /opt/jboss/wildfly/standalone/configuration/standalone.xml
 
 RUN curl -o /opt/jboss/wildfly/standalone/deployments/mysql-connector-java-5.1.21.jar https://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.21/mysql-connector-java-5.1.21.jar
 RUN curl -o /opt/jboss/wildfly/standalone/deployments/evoppi-ear-${buildear}.ear https://maven.sing-group.org/repository/${maven_server}/org/sing_group/evoppi-ear/${version}/evoppi-ear-${buildear}.ear
 RUN /opt/jboss/wildfly/bin/add-user.sh admin admin --silent
 RUN sed -i 's/-Xmx512m/-Xmx4G/g' /opt/jboss/wildfly/bin/standalone.conf
 
-CMD ["/wait_for_mysql_and_start_wildfly.sh"]
+CMD ["/opt/wait_for_mysql_and_start_wildfly.sh"]

@@ -41,5 +41,6 @@ ADD apache/.htaccess /usr/local/apache2/htdocs/.htaccess
 RUN sed 's/^#LoadModule\ rewrite_module/LoadModule\ rewrite_module/' -i /usr/local/apache2/conf/httpd.conf
 RUN sed '/^<Directory \"\/usr\/local\/apache2\/htdocs\">$/,/^<\/Directory>$/ s/AllowOverride None/AllowOverride all/' -i /usr/local/apache2/conf/httpd.conf
 
-RUN sed -i -e "s#http://evoppi.sing-group.org/evoppi-backend/rest/#http://${backend_host}/evoppi-backend/rest/#g" /usr/local/apache2/htdocs/main*.js
 RUN sed -i -e "s#http://evoppi.i3s.up.pt#http://${frontend_host}#g" /usr/local/apache2/htdocs/main*.js
+RUN sed -i -e "s#http://${frontend_host}/evoppi-backend/rest/#http://${backend_host}/evoppi-backend/rest/#g" /usr/local/apache2/htdocs/main*.js
+

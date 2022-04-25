@@ -51,6 +51,7 @@ services:
         version: ${EVOPPI_BACKEND_VERSION:-1.2.0}
         buildear: ${EVOPPI_BACKEND_EAR_BUILD:-1.2.0}
         maven_server: ${EVOPPI_BACKEND_MAVEN_SERVER:-maven-releases}
+        database_container_name: ${EVOPPI_DATABASE_CONTAINER_NAME:-evoppi-database}
     container_name: ${EVOPPI_BACKEND_CONTAINER_NAME:-evoppi-backend}
     ports:
       - "${EVOPPI_BACKEND_HTTP_PORT:-8080}:8080"
