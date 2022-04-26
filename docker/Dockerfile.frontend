@@ -29,7 +29,7 @@ ARG frontend_host
 RUN apt-get update \
  && apt-get -y install wget
 
-RUN wget https://maven.sing-group.org/repository/${npm_server}/@evoppi/frontend/-/frontend-${version}.tgz \
+RUN wget --no-check-certificate https://maven.sing-group.org/repository/${npm_server}/@evoppi/frontend/-/frontend-${version}.tgz \
  && tar zxvf frontend-${version}.tgz \
  && mv package/dist/* /usr/local/apache2/htdocs/
 
